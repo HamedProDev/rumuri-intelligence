@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { ArrowRight, Sparkles, LayoutGrid } from "lucide-react";
+import { ArrowRight, LayoutGrid } from "lucide-react";
 import { Navbar } from "@/components/site/Navbar";
 import { MeshWave } from "@/components/site/MeshWave";
 import { Particles } from "@/components/site/Particles";
@@ -52,19 +52,6 @@ function Hero() {
 
       <div className="relative max-w-7xl mx-auto grid lg:grid-cols-[1.05fr_1fr] gap-10 items-center">
         <div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 glass rounded-full pl-1 pr-4 py-1 text-xs mb-6"
-          >
-            <span className="inline-flex items-center gap-1.5 bg-primary/15 text-primary rounded-full px-2.5 py-1">
-              <Sparkles className="w-3 h-3" /> New
-            </span>
-            <span className="text-muted-foreground">Kinyabase-1 · Kinyarwanda foundation model</span>
-            <ArrowRight className="w-3 h-3 text-primary" />
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
