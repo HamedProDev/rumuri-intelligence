@@ -82,12 +82,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Rumuri Intelligence" },
       { name: "theme-color", content: "#ffffff" },
       { property: "og:title", content: "Rumuri Intelligence — AI for Rwanda & Africa" },
-      { property: "og:description", content: "Building the foundational AI technologies that empower Rwanda and Africa." },
+      { property: "og:description", content: "Rumuri Intelligence is a Rwandan AI research and product company building foundational NLP, speech, vision, accessibility, and autonomous systems for Africa." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Rumuri Intelligence" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Rumuri Intelligence" },
-      { name: "twitter:description", content: "AI for Good. Intelligence for All." },
+      { name: "twitter:title", content: "Rumuri Intelligence — AI for Rwanda & Africa" },
+      { name: "twitter:description", content: "Rumuri Intelligence is a Rwandan AI research and product company building foundational NLP, speech, vision, accessibility, and autonomous systems for Africa." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c6c68127-f498-44c0-9e13-30d30cc2d683/id-preview-38da704c--e1f11878-8537-44a7-a118-df7de155a1d7.lovable.app-1783272362939.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c6c68127-f498-44c0-9e13-30d30cc2d683/id-preview-38da704c--e1f11878-8537-44a7-a118-df7de155a1d7.lovable.app-1783272362939.png" },
     ],
     links: [
       {
