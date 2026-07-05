@@ -4,10 +4,11 @@ import { ArrowRight, LayoutGrid } from "lucide-react";
 import { Navbar } from "@/components/site/Navbar";
 import { MeshWave } from "@/components/site/MeshWave";
 import { Particles } from "@/components/site/Particles";
+import { BackToTop } from "@/components/site/BackToTop";
 import {
   About,
   Solutions,
-  Stats,
+  AnimatedStats,
   Products,
   Research,
   Founder,
@@ -15,6 +16,9 @@ import {
   Contact,
   Footer,
 } from "@/components/site/Sections";
+import { Testimonials } from "@/components/site/Testimonials";
+import { LanguageMap } from "@/components/site/LanguageMap";
+import { ProductDemos } from "@/components/site/ProductDemos";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -26,21 +30,28 @@ function Index() {
       <Navbar />
       <Hero />
       <Solutions />
-      <Stats />
+      <AnimatedStats />
+      <LanguageMap />
       <About />
       <Products />
+      <ProductDemos />
       <Research />
       <Founder />
+      <Testimonials />
       <Partners />
       <Contact />
       <Footer />
+      <BackToTop />
     </div>
   );
 }
 
 function Hero() {
   return (
-    <section id="home" className="relative min-h-[100svh] pt-32 md:pt-40 pb-16 px-5 md:px-8 overflow-hidden">
+    <section
+      id="home"
+      className="relative min-h-[100svh] pt-32 md:pt-40 pb-16 px-5 md:px-8 overflow-hidden"
+    >
       {/* backdrop */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 right-[-10%] w-[900px] h-[900px] -translate-y-1/2 opacity-90">
@@ -59,8 +70,7 @@ function Hero() {
             className="font-display text-[44px] leading-[1.02] sm:text-6xl lg:text-7xl xl:text-[88px] font-semibold tracking-tight"
           >
             Building the Intelligence
-            <br /> that Empowers{" "}
-            <span className="text-gradient-neon">Rwanda</span>{" "}
+            <br /> that Empowers <span className="text-gradient-neon">Rwanda</span>{" "}
             <span className="text-muted-foreground/40">and</span>{" "}
             <span className="text-gradient-neon">Africa.</span>
           </motion.h1>
@@ -71,9 +81,9 @@ function Hero() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="text-muted-foreground text-base md:text-lg mt-7 max-w-xl leading-relaxed"
           >
-            Rumuri Intelligence is an AI research and product company building
-            the foundational technologies for a smarter, more inclusive
-            future — in African languages, for African people.
+            Rumuri Intelligence is an AI research and product company building the foundational
+            technologies for a smarter, more inclusive future — in African languages, for African
+            people.
           </motion.p>
 
           <motion.div
@@ -111,10 +121,11 @@ function Hero() {
         </div>
 
         {/* right visual on mobile stacks below */}
-        <div className="relative h-[380px] lg:h-[560px] hidden lg:block">
-          <div className="absolute inset-0">
+        <div className="relative hidden lg:block">
+          <div className="absolute inset-0 opacity-80">
             <MeshWave />
           </div>
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background" />
         </div>
       </div>
     </section>

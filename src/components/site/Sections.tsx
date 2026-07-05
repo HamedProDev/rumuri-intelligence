@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "motion/react";
 import {
   ArrowRight,
@@ -24,9 +25,9 @@ import {
   Quote,
   Zap,
   Youtube,
+  ExternalLink,
 } from "lucide-react";
 import kigali from "@/assets/kigali.jpg";
-import founder from "@/assets/founder.jpg";
 import pVoice from "@/assets/product-voice.jpg";
 import pSign from "@/assets/product-sign.jpg";
 import pOcr from "@/assets/product-ocr.jpg";
@@ -50,14 +51,46 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 /* ============================ ABOUT / SOLUTIONS ============================ */
 
 const solutions = [
-  { icon: Languages, title: "NLP & Language AI", desc: "Kinyarwanda-first NLP, translation, chatbots, and multilingual language understanding." },
-  { icon: Mic, title: "Speech & Voice AI", desc: "ASR, TTS, voice cloning and multilingual speech technologies for African languages." },
-  { icon: Eye, title: "Computer Vision", desc: "Image understanding, OCR, object detection and scene reasoning at scale." },
-  { icon: Accessibility, title: "AI for Accessibility", desc: "Sign-language translation and tools empowering people with disabilities." },
-  { icon: Car, title: "Autonomous Mobility", desc: "Perception stacks for smart transportation and self-driving research." },
-  { icon: Brain, title: "Foundation Models", desc: "Sovereign African foundation models fine-tuned for local knowledge and dialects." },
-  { icon: Bot, title: "Generative AI", desc: "Creative and productivity assistants that speak, write, and reason in Kinyarwanda." },
-  { icon: Cloud, title: "AI Cloud", desc: "GPU infrastructure, MLOps and inference tooling built for the African ecosystem." },
+  {
+    icon: Languages,
+    title: "NLP & Language AI",
+    desc: "Kinyarwanda-first NLP, translation, chatbots, and multilingual language understanding.",
+  },
+  {
+    icon: Mic,
+    title: "Speech & Voice AI",
+    desc: "ASR, TTS, voice cloning and multilingual speech technologies for African languages.",
+  },
+  {
+    icon: Eye,
+    title: "Computer Vision",
+    desc: "Image understanding, OCR, object detection and scene reasoning at scale.",
+  },
+  {
+    icon: Accessibility,
+    title: "AI for Accessibility",
+    desc: "Sign-language translation and tools empowering people with disabilities.",
+  },
+  {
+    icon: Car,
+    title: "Autonomous Mobility",
+    desc: "Perception stacks for smart transportation and self-driving research.",
+  },
+  {
+    icon: Brain,
+    title: "Foundation Models",
+    desc: "Sovereign African foundation models fine-tuned for local knowledge and dialects.",
+  },
+  {
+    icon: Bot,
+    title: "Generative AI",
+    desc: "Creative and productivity assistants that speak, write, and reason in Kinyarwanda.",
+  },
+  {
+    icon: Cloud,
+    title: "AI Cloud",
+    desc: "GPU infrastructure, MLOps and inference tooling built for the African ecosystem.",
+  },
 ];
 
 export function Solutions() {
@@ -72,9 +105,8 @@ export function Solutions() {
             </h2>
           </div>
           <p className="text-muted-foreground text-base md:text-lg max-w-xl">
-            We build and deploy ethical AI systems across language, speech,
-            vision, accessibility and autonomy — engineered to solve Africa's
-            most important challenges.
+            We build and deploy ethical AI systems across language, speech, vision, accessibility
+            and autonomy — engineered to solve Africa's most important challenges.
           </p>
         </div>
 
@@ -110,39 +142,104 @@ export function Solutions() {
 /* ============================ STATS ============================ */
 
 const stats = [
-  { icon: Box, value: "25+", label: "Projects Delivered" },
-  { icon: Globe, value: "10+", label: "African Languages" },
-  { icon: AudioLines, value: "500K+", label: "Audio Hours Collected" },
-  { icon: Users, value: "1M+", label: "Lives Impacted" },
+  { icon: Box, target: 25, suffix: "+", label: "Projects Delivered" },
+  { icon: Globe, target: 10, suffix: "+", label: "African Languages" },
+  { icon: AudioLines, target: 500, suffix: "K+", label: "Audio Hours Collected" },
+  { icon: Users, target: 1, suffix: "M+", label: "Lives Impacted" },
 ];
 
-export function Stats() {
+function useAnimatedCounter(target: number, inView: boolean, duration = 2000) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    let raf: number;
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      setValue(Math.floor(progress * target));
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, target, duration]);
+
+  return value;
+}
+
+export function AnimatedStats() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const hasAnimated = useRef(false);
+
+  const handleView = useCallback(() => {
+    if (!hasAnimated.current) {
+      hasAnimated.current = true;
+      setInView(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          handleView();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [handleView]);
+
   return (
-    <section className="relative px-5 md:px-8 -mt-8">
+    <section className="relative px-5 md:px-8 -mt-8" ref={sectionRef}>
       <div className="max-w-7xl mx-auto glass-strong rounded-3xl p-8 md:p-10 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 relative">
           {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="flex items-center gap-4"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0">
-                <s.icon className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <div className="font-display text-3xl md:text-4xl font-semibold text-gradient-neon">{s.value}</div>
-                <div className="text-xs md:text-sm text-muted-foreground mt-0.5">{s.label}</div>
-              </div>
-            </motion.div>
+            <StatItem key={s.label} stat={s} index={i} inView={inView} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function StatItem({
+  stat,
+  index,
+  inView,
+}: {
+  stat: (typeof stats)[number];
+  index: number;
+  inView: boolean;
+}) {
+  const count = useAnimatedCounter(stat.target, inView);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      className="flex items-center gap-4"
+    >
+      <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0">
+        <stat.icon className="w-5 h-5 text-primary" />
+      </div>
+      <div>
+        <div className="font-display text-3xl md:text-4xl font-semibold text-gradient-neon">
+          {count}
+          {stat.suffix}
+        </div>
+        <div className="text-xs md:text-sm text-muted-foreground mt-0.5">{stat.label}</div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -160,18 +257,16 @@ export function About() {
         >
           <SectionLabel>Who we are</SectionLabel>
           <h2 className="font-display text-4xl md:text-6xl font-semibold mt-4 leading-[1.05]">
-            Pioneering AI for a{" "}
-            <span className="text-gradient-neon">better tomorrow.</span>
+            Pioneering AI for a <span className="text-gradient-neon">better tomorrow.</span>
           </h2>
           <p className="text-muted-foreground text-base md:text-lg mt-6 leading-relaxed">
-            Rumuri Intelligence is a Rwandan AI company with a mission to build
-            world-class technologies that understand Africa — in African
-            languages, and for African people.
+            Rumuri Intelligence is a Rwandan AI company with a mission to build world-class
+            technologies that understand Africa — in African languages, and for African people.
           </p>
           <p className="text-muted-foreground text-base mt-4 leading-relaxed">
-            We believe AI should be ethical, inclusive, and accessible to all.
-            Our work spans research, products, and partnerships that create
-            meaningful and lasting impact across the continent.
+            We believe AI should be ethical, inclusive, and accessible to all. Our work spans
+            research, products, and partnerships that create meaningful and lasting impact across
+            the continent.
           </p>
           <a
             href="#solutions"
@@ -213,8 +308,8 @@ export function About() {
               <div className="font-display font-medium">Our Mission</div>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              To build ethical AI that empowers communities and drives
-              sustainable development across Africa.
+              To build ethical AI that empowers communities and drives sustainable development
+              across Africa.
             </p>
           </motion.div>
         </motion.div>
@@ -226,11 +321,36 @@ export function About() {
 /* ============================ PRODUCTS ============================ */
 
 const products = [
-  { name: "Kwanda Voice", tag: "Speech", desc: "Real-time speech recognition and voice AI for Kinyarwanda.", img: pVoice },
-  { name: "Kwanda Chat", tag: "Assistant", desc: "Conversational AI that understands Rwanda's context and dialects.", img: pChat },
-  { name: "AI Sign", tag: "Accessibility", desc: "AI-powered sign language translation for inclusive communication.", img: pSign },
-  { name: "Kwanda OCR", tag: "Vision", desc: "Extracting text from images and documents in Kinyarwanda.", img: pOcr },
-  { name: "Smart Mobility", tag: "Autonomy", desc: "Perception intelligence for safer, smarter African roads.", img: pMobility },
+  {
+    name: "Kwanda Voice",
+    tag: "Speech",
+    desc: "Real-time speech recognition and voice AI for Kinyarwanda.",
+    img: pVoice,
+  },
+  {
+    name: "Kwanda Chat",
+    tag: "Assistant",
+    desc: "Conversational AI that understands Rwanda's context and dialects.",
+    img: pChat,
+  },
+  {
+    name: "AI Sign",
+    tag: "Accessibility",
+    desc: "AI-powered sign language translation for inclusive communication.",
+    img: pSign,
+  },
+  {
+    name: "Kwanda OCR",
+    tag: "Vision",
+    desc: "Extracting text from images and documents in Kinyarwanda.",
+    img: pOcr,
+  },
+  {
+    name: "Smart Mobility",
+    tag: "Autonomy",
+    desc: "Perception intelligence for safer, smarter African roads.",
+    img: pMobility,
+  },
 ];
 
 export function Products() {
@@ -244,7 +364,10 @@ export function Products() {
               Intelligence in <span className="text-gradient-neon">Action.</span>
             </h2>
           </div>
-          <a href="#research" className="text-sm text-primary inline-flex items-center gap-1 hover:gap-2 transition-all">
+          <a
+            href="#research"
+            className="text-sm text-primary inline-flex items-center gap-1 hover:gap-2 transition-all"
+          >
             View all projects <ArrowRight className="w-4 h-4" />
           </a>
         </div>
@@ -278,7 +401,9 @@ export function Products() {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-5">
                 <h3 className="font-display text-lg font-medium mb-1.5">{p.name}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{p.desc}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                  {p.desc}
+                </p>
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">Explore</span>
                   <div className="w-8 h-8 rounded-full border border-primary/40 flex items-center justify-center bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
@@ -310,8 +435,7 @@ export function Research() {
         <div className="mb-14">
           <SectionLabel>Research</SectionLabel>
           <h2 className="font-display text-4xl md:text-6xl font-semibold mt-4 max-w-3xl">
-            Advancing the frontier of{" "}
-            <span className="text-gradient-neon">African AI.</span>
+            Advancing the frontier of <span className="text-gradient-neon">African AI.</span>
           </h2>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
@@ -326,7 +450,9 @@ export function Research() {
               className="group glass rounded-2xl p-7 hover-lift flex items-start justify-between gap-6"
             >
               <div>
-                <div className="text-[10px] tracking-[0.2em] uppercase text-primary mb-3">{r.area} · {r.date}</div>
+                <div className="text-[10px] tracking-[0.2em] uppercase text-primary mb-3">
+                  {r.area} · {r.date}
+                </div>
                 <h3 className="font-display text-xl md:text-2xl font-medium leading-tight group-hover:text-gradient-neon transition-all">
                   {r.title}
                 </h3>
@@ -364,7 +490,7 @@ export function Founder() {
               <div className="absolute inset-0 rounded-full bg-primary/30 blur-2xl" />
               <div className="relative w-56 h-56 md:w-64 md:h-64 rounded-full overflow-hidden border-2 border-primary/40 glow-neon">
                 <img
-                  src={founder}
+                  src="https://res.cloudinary.com/dg8ywm9ym/image/upload/v1781456671/hamedpro/profile/rgqz1gbh5uaqjtw1unwc.jpg"
                   alt="Hamed Hussein — Founder & CEO"
                   width={896}
                   height={1024}
@@ -376,22 +502,32 @@ export function Founder() {
 
             <div>
               <SectionLabel>Founder & CEO</SectionLabel>
-              <h3 className="font-display text-3xl md:text-5xl font-semibold mt-3">Hamed Hussein</h3>
+              <h3 className="font-display text-3xl md:text-5xl font-semibold mt-3">
+                Hamed Hussein
+              </h3>
               <p className="text-muted-foreground mt-4 text-sm md:text-base max-w-xl leading-relaxed">
-                Hamed Hussein is a visionary AI engineer and entrepreneur
-                passionate about building impactful technologies for Africa.
-                Through Rumuri Intelligence, he leads a team of researchers and
-                builders shaping the future of intelligent systems in Kinyarwanda
+                Hamed Hussein is a visionary AI engineer and entrepreneur passionate about building
+                impactful technologies for Africa. Through Rumuri Intelligence, he leads a team of
+                researchers and builders shaping the future of intelligent systems in Kinyarwanda
                 and beyond.
               </p>
               <div className="flex items-center gap-2 mt-6">
-                {[Linkedin, Twitter, Mail, Github].map((Icon, i) => (
+                {[
+                  { icon: Linkedin, href: "https://www.linkedin.com/in/hamed-prodev" },
+                  { icon: Twitter, href: "https://x.com/hamedprodev" },
+                  { icon: Mail, href: "mailto:hamussein01@gmail.com" },
+                  { icon: Github, href: "https://hamedprodev.onrender.com" },
+                  { icon: Globe, href: "https://hahupro.vercel.app/" },
+                  { icon: Brain, href: "https://huggingface.co/Hamed-PRO" },
+                ].map((s, i) => (
                   <a
                     key={i}
-                    href="#contact"
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
-                    <Icon className="w-4 h-4" />
+                    <s.icon className="w-4 h-4" />
                   </a>
                 ))}
               </div>
@@ -405,8 +541,8 @@ export function Founder() {
             >
               <Quote className="w-6 h-6 text-primary mb-3" />
               <p className="text-sm md:text-base leading-relaxed italic">
-                "Our goal is not just to build AI, but to build AI that
-                understands us, represents us, and uplifts us."
+                "Our goal is not just to build AI, but to build AI that understands us, represents
+                us, and uplifts us."
               </p>
               <div className="font-display text-primary mt-4 text-sm">— Hamed Hussein</div>
             </motion.div>
@@ -419,7 +555,15 @@ export function Founder() {
 
 /* ============================ PARTNERS ============================ */
 
-const partners = ["RISA", "Irembo", "Microsoft for Startups", "NVIDIA Inception", "Carnegie Mellon Africa", "Africa AI", "kLab"];
+const partners = [
+  "RISA",
+  "Irembo",
+  "Microsoft for Startups",
+  "NVIDIA Inception",
+  "Carnegie Mellon Africa",
+  "Africa AI",
+  "kLab",
+];
 
 export function Partners() {
   return (
@@ -458,14 +602,13 @@ export function Contact() {
               Let's build the <span className="text-gradient-neon">future of AI</span> together.
             </h2>
             <p className="text-muted-foreground mt-6 max-w-lg">
-              Partner with us on research, products, and initiatives that push
-              African intelligence forward.
+              Partner with us on research, products, and initiatives that push African intelligence
+              forward.
             </p>
             <div className="space-y-4 mt-10">
               {[
                 { icon: Mail, label: "hamussein01@gmail.com" },
-                { icon: Phone, label: "+250 795 123 456" },
-                { icon: MapPin, label: "Kigali Heights, 4th Floor · Kigali, Rwanda" },
+                { icon: MapPin, label: "Kigali, Gasabo, Remera" },
               ].map((c) => (
                 <div key={c.label} className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center">
@@ -489,7 +632,9 @@ export function Contact() {
             </div>
             <Field label="Company" placeholder="Where you work" />
             <div>
-              <label className="text-xs uppercase tracking-wider text-muted-foreground">Message</label>
+              <label className="text-xs uppercase tracking-wider text-muted-foreground">
+                Message
+              </label>
               <textarea
                 rows={5}
                 placeholder="Tell us about your project..."
@@ -509,7 +654,10 @@ export function Contact() {
   );
 }
 
-function Field({ label, ...rest }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+function Field({
+  label,
+  ...rest
+}: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div>
       <label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</label>
@@ -534,29 +682,71 @@ export function Footer() {
             </div>
             <div>
               <div className="font-display font-semibold">Rumuri</div>
-              <div className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">Intelligence</div>
+              <div className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                Intelligence
+              </div>
             </div>
           </a>
           <p className="text-sm text-muted-foreground mt-5 max-w-xs leading-relaxed">
             Building the intelligence that empowers Rwanda and Africa.
           </p>
           <div className="flex items-center gap-2 mt-6">
-            {[Linkedin, Twitter, Youtube, Github].map((Icon, i) => (
-              <a key={i} href="#" className="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
-                <Icon className="w-4 h-4" />
+            {[
+              { icon: Linkedin, href: "https://www.linkedin.com/in/hamed-prodev" },
+              { icon: Twitter, href: "https://x.com/hamedprodev" },
+              { icon: Globe, href: "https://hahupro.vercel.app/" },
+              { icon: Github, href: "https://hamedprodev.onrender.com" },
+            ].map((s, i) => (
+              <a
+                key={i}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                <s.icon className="w-4 h-4" />
               </a>
             ))}
           </div>
+          <div className="mt-8">
+            <p className="text-sm font-medium mb-3">Stay updated on African AI</p>
+            <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
+              <input
+                type="email"
+                placeholder="you@company.com"
+                className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors"
+              />
+              <button
+                type="submit"
+                className="px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
         </div>
         <FooterCol title="Company" links={["About Us", "Our Team", "Careers", "News"]} />
-        <FooterCol title="Solutions" links={["NLP & Language", "Speech & Voice", "Computer Vision", "Accessibility", "Mobility"]} />
+        <FooterCol
+          title="Solutions"
+          links={[
+            "NLP & Language",
+            "Speech & Voice",
+            "Computer Vision",
+            "Accessibility",
+            "Mobility",
+          ]}
+        />
         <FooterCol title="Resources" links={["Research", "Publications", "Blog", "Datasets"]} />
       </div>
       <div className="max-w-7xl mx-auto mt-14 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
         <div>© {new Date().getFullYear()} Rumuri Intelligence. All rights reserved.</div>
         <div className="flex gap-6">
-          <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
+          <a href="#" className="hover:text-foreground transition-colors">
+            Privacy Policy
+          </a>
+          <a href="#" className="hover:text-foreground transition-colors">
+            Terms of Service
+          </a>
         </div>
       </div>
     </footer>
@@ -570,7 +760,12 @@ function FooterCol({ title, links }: { title: string; links: string[] }) {
       <ul className="space-y-2.5">
         {links.map((l) => (
           <li key={l}>
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">{l}</a>
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              {l}
+            </a>
           </li>
         ))}
       </ul>

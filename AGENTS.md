@@ -1,10 +1,20 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
+# AGENTS
+
+## Running the project
+
+```bash
+npm run dev       # Start dev server at http://localhost:8080
+npm run build     # Production build
+npm run lint      # ESLint check
+npm run format    # Prettier format
+npx tsc --noEmit  # TypeScript type check
+```
+
+## Code conventions
+
+- Use `cn()` from `@/lib/utils` for className merging
+- Import UI components from `@/components/ui/`
+- Import site components from `@/components/site/`
+- All animations use `motion/react` (not `framer-motion`)
+- Colors use oklch format, defined in `src/styles.css`
+- Routes use TanStack Router file-based routing

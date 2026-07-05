@@ -5,11 +5,7 @@ export function MeshWave() {
   const lines = 22;
   return (
     <div className="relative w-full h-full pointer-events-none">
-      <svg
-        viewBox="0 0 800 600"
-        className="w-full h-full"
-        preserveAspectRatio="xMidYMid slice"
-      >
+      <svg viewBox="0 0 800 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="neonLine" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="oklch(0.55 0.22 260)" stopOpacity="0" />

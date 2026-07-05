@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 
 const links = [
   { href: "#home", label: "Home" },
@@ -8,13 +9,15 @@ const links = [
   { href: "#solutions", label: "Solutions" },
   { href: "#products", label: "Products" },
   { href: "#research", label: "Research" },
-  { href: "#founder", label: "Founder" },
+  { href: "/blog", label: "Blog" },
+  { href: "/careers", label: "Careers" },
   { href: "#contact", label: "Contact" },
 ];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { theme, toggle } = useTheme();
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 20);
     on();
@@ -33,7 +36,9 @@ export function Navbar() {
       <div className={`mx-auto max-w-7xl px-5 md:px-8`}>
         <div
           className={`flex items-center justify-between rounded-2xl px-4 md:px-6 py-3 transition-all ${
-            scrolled ? "glass-strong" : ""
+            scrolled
+              ? "glass-strong shadow-lg shadow-black/5 border border-white/20"
+              : "bg-white/60 backdrop-blur-sm border border-white/10"
           }`}
         >
           <a href="#home" className="flex items-center gap-2.5 group">
@@ -43,7 +48,9 @@ export function Navbar() {
             </div>
             <div className="leading-tight">
               <div className="font-display font-semibold text-sm md:text-base">Rumuri</div>
-              <div className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">Intelligence</div>
+              <div className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                Intelligence
+              </div>
             </div>
           </a>
 
@@ -61,6 +68,13 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={toggle}
+              className="p-2 rounded-lg glass hover:bg-primary/10 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            </button>
             <a
               href="#contact"
               className="hidden md:inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/5 px-5 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-primary-foreground transition-all"
