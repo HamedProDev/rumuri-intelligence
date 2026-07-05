@@ -463,7 +463,7 @@ export function Contact() {
             </p>
             <div className="space-y-4 mt-10">
               {[
-                { icon: Mail, label: "hello@rumuriintelligence.com" },
+                { icon: Mail, label: "hamussein01@gmail.com" },
                 { icon: Phone, label: "+250 795 123 456" },
                 { icon: MapPin, label: "Kigali Heights, 4th Floor · Kigali, Rwanda" },
               ].map((c) => (
