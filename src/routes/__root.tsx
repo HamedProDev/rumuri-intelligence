@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Rumuri Intelligence — AI for Rwanda & Africa" },
       { name: "description", content: "Rumuri Intelligence is a Rwandan AI research and product company building foundational NLP, speech, vision, accessibility, and autonomous systems for Africa." },
       { name: "author", content: "Rumuri Intelligence" },
-      { name: "theme-color", content: "#00170f" },
+      { name: "theme-color", content: "#ffffff" },
       { property: "og:title", content: "Rumuri Intelligence — AI for Rwanda & Africa" },
       { property: "og:description", content: "Building the foundational AI technologies that empower Rwanda and Africa." },
       { property: "og:type", content: "website" },

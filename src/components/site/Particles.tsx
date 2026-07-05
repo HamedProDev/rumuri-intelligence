@@ -22,8 +22,8 @@ export function Particles({ count = 40 }: { count?: number }) {
               top: `${top}%`,
               width: size,
               height: size,
-              background: "oklch(0.9 0.22 148)",
-              boxShadow: "0 0 8px oklch(0.9 0.22 148 / 0.8)",
+              background: "oklch(0.55 0.22 260)",
+              boxShadow: "0 0 8px oklch(0.55 0.22 260 / 0.6)",
               animationDuration: `${dur}s`,
               animationDelay: `${delay}s`,
             }}

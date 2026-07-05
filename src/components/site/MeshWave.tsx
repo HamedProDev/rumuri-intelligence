@@ -12,13 +12,13 @@ export function MeshWave() {
       >
         <defs>
           <linearGradient id="neonLine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="oklch(0.85 0.22 148)" stopOpacity="0" />
-            <stop offset="50%" stopColor="oklch(0.9 0.22 148)" stopOpacity="1" />
-            <stop offset="100%" stopColor="oklch(0.7 0.18 190)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.55 0.22 260)" stopOpacity="0" />
+            <stop offset="50%" stopColor="oklch(0.6 0.22 280)" stopOpacity="1" />
+            <stop offset="100%" stopColor="oklch(0.65 0.2 300)" stopOpacity="0" />
           </linearGradient>
           <radialGradient id="meshGlow" cx="0.6" cy="0.4" r="0.6">
-            <stop offset="0%" stopColor="oklch(0.85 0.22 148)" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="oklch(0.85 0.22 148)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.55 0.22 260)" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="oklch(0.55 0.22 260)" stopOpacity="0" />
           </radialGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="2.2" result="b" />
